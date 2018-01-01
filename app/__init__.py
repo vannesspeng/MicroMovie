@@ -1,7 +1,7 @@
 import time
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_redis import FlaskRedis
 from app import config
 
 app = Flask(__name__)
@@ -9,7 +9,7 @@ app.config.from_object(config)
 app.debug = True
 
 db = SQLAlchemy(app)
-
+rd = FlaskRedis(app)
 from app.admin import admin as admin_blueprint
 from app.home import home as home_blueprint
 
