@@ -1,5 +1,7 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request, flash, session
 
+from app.admin.forms import LoginForm
+from app.models import Admin
 from . import admin
 
 @admin.route('/')
@@ -7,12 +9,21 @@ def index():
     return render_template("admin/index.html")
 
 
-@admin.route("/login/")
+@admin.route("/login/", methods=["POST", "GET"])
 def login():
     """
     后台登录
     """
-    return render_template("admin/login.html")
+    form = LoginForm()
+    if request.method == 'POST' and form.validate():
+        data = form.data
+        admin = Admin.query.filter_by(name=data['account']).first()
+        if not admin.check_pwd(data['pwd']):
+            flash('密码错误')
+            return redirect(url_for('admin.login'))
+        session['admin'] = data['account']
+        return redirect(request.args.get('next') or url_for('admin.index'))
+    return render_template("admin/login.html", form=form)
 
 
 @admin.route("/logout/")
@@ -25,7 +36,7 @@ def logout():
 @admin.route("/pwd/")
 def pwd():
     """
-    后台登录
+    修改登录
     """
     return render_template("admin/pwd.html")
 
