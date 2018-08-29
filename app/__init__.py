@@ -1,8 +1,13 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+from app import config
 
 app = Flask(__name__)
+app.config.from_object(config)
 app.debug = True
 
+db = SQLAlchemy(app)
 
 from app.admin import admin as admin_blueprint
 from app.home import home as home_blueprint

@@ -1,21 +1,9 @@
 # _*_ coding: utf-8 _*_
 from datetime import datetime
+from app import db
 
 __author__ = 'vanness'
 __date__ = '2017/8/26 17:05'
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import pymysql
-
-app = Flask(__name__)
-# 用于连接数据的数据库。
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root@127.0.0.1:3306/movie"
-# 如果设置成 True (默认情况)，Flask-SQLAlchemy 将会追踪对象的修改并且发送信号。
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-
-db = SQLAlchemy(app)
-
 
 # 会员数据模型
 class User(db.Model):
@@ -30,7 +18,7 @@ class User(db.Model):
     addtime = db.Column(db.DateTime, index=True, default=datetime.utcnow)  # 注册时间
     uuid = db.Column(db.String(255), unique=True)  # 唯一标识符
     # （设置外键的第二步）
-    userlogs = db.relationship('userlog', backref='user')  # 会员日志外键关系关联
+    userlogs = db.relationship('Userlog', backref='user')  # 会员日志外键关系关联
     comments = db.relationship('Comment', backref='user')  # 评论外键关系关联
     moviecols = db.relationship('Moviecol', backref='user')  # 收藏外键关系关联
 
@@ -196,4 +184,5 @@ class Oplog(db.Model):
 
 
 if __name__ == "__main__":
-    db.create_all()
+    # db.create_all()
+    pass
