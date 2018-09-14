@@ -6,8 +6,8 @@
     <section class="content-header">
         <h1>微电影管理系统</h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> 个人资料</a></li>
-            <li class="active">修改密码</li>
+            <li><a href="#"><i class="fa fa-dashboard"></i> 预告管理</a></li>
+            <li class="active">编辑预告</li>
         </ol>
     </section>
     <section class="content" id="showcontent">
@@ -15,9 +15,9 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">修改密码</h3>
+                        <h3 class="box-title">编辑预告</h3>
                     </div>
-                    <form role="form" method="post">
+                    <form role="form" method="post" enctype="multipart/form-data">
                         <div class="box-body">
                             {% for msg in get_flashed_messages(category_filter=["ok"]) %}
                                 <div class="alert alert-success alert-dismissible">
@@ -36,28 +36,20 @@
                                 </div>
                             {% endfor %}
                             <div class="form-group">
-                                <label for="input_pwd">旧密码</label>
-                                <!-- <input type="password" class="form-control" id="input_pwd" placeholder="请输入旧密码！"> -->
-                                {{ form.old_pwd }}
-                                {% for err in form.old_pwd.errors %}
-                                    <div class="col-md-12">
-                                        <p style="color:red">{{ err }}</p>
-                                    </div>
-                                {% endfor %}
+                                <label for="input_title">预告标题</label>
+                                <!--<input type="text" class="form-control" id="input_title" placeholder="请输入预告标题！"> -->
+                                {{ form.title(value=preview.title) }}
                             </div>
                             <div class="form-group">
-                                <label for="input_newpwd">新密码</label>
-                                <!-- <input type="password" class="form-control" id="input_newpwd" placeholder="请输入新密码！"> -->
-                                {{ form.new_pwd }}
-                                {% for err in form.new_pwd.errors %}
-                                    <div class="col-md-12">
-                                        <p style="color:red">{{ err }}</p>
-                                    </div>
-                                {% endfor %}
+                                <label for="input_logo">预告封面</label>
+                                <!-- <input type="file" id="input_logo"> -->
+                                {{ form.logo }}
+                                <img data-src="holder.js/700x320" style="margin-top:5px;" class="img-responsive"
+                                     alt="">
                             </div>
                         </div>
                         <div class="box-footer">
-                            <!-- <utton type="submit" class="btn btn-primary">修改</button> -->
+                            <!-- <button type="submit" class="btn btn-primary">添加</button> -->
                             {{ form.submit }}
                             {{ form.csrf_token }}
                         </div>
@@ -67,4 +59,14 @@
         </div>
     </section>
     <!--内容-->
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $("#g-4").addClass("active");
+            $("#g-4-1").addClass("active")
+        });
+    </script>
 {% endblock %}
