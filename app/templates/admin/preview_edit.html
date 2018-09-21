@@ -44,7 +44,7 @@
                                 <label for="input_logo">预告封面</label>
                                 <!-- <input type="file" id="input_logo"> -->
                                 {{ form.logo }}
-                                <img data-src="holder.js/700x320" style="margin-top:5px;" class="img-responsive"
+                                <img id="upload_img" src="{{ url_for('static', filename='uploads/' + preview.logo) }}" style="margin-top:5px;" class="img-responsive"
                                      alt="">
                             </div>
                         </div>
@@ -67,6 +67,16 @@
         $(document).ready(function () {
             $("#g-4").addClass("active");
             $("#g-4-1").addClass("active")
+            $("#logo").change(function (event) {
+                var input = event.target;
+                var reader = new FileReader();
+                reader.onload = function(){
+                    var dataURL = reader.result;
+                    var output = document.getElementById('upload_img');
+                    output.src = dataURL;
+                }
+                reader.readAsDataURL(input.files[0])
+            });
         });
     </script>
 {% endblock %}

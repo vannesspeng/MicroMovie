@@ -23,7 +23,10 @@ def admin_log_req(f):
 
     return decorated_function
 
+
 '''定义权限控制装饰器'''
+
+
 def admin_auth(f):
     # 权限查询
     @wraps(f)
@@ -36,13 +39,14 @@ def admin_auth(f):
             Admin.id == session['admin_id']
         ).first()
         auths = admin.role.auths
-        auths = list(map(lambda v:int(v), auths.split(",")))
+        auths = list(map(lambda v: int(v), auths.split(",")))
         auth_list = Auth.query.all()
         urls = [v.url for v in auth_list for val in auths if val == v.id]
         rule = request.url_rule
         if str(rule) not in urls:
             abort(404)
         return f(*args, **kwargs)
+
     return decorator_function
 
 
@@ -347,6 +351,9 @@ def preview_add():
     上映预告添加
     """
     form = PreviewForm()
+    if request.method == 'GET':
+        form.submit.label.label = '添加'
+
     if form.validate_on_submit():
         data = form.data
         # 保存标题图片
@@ -592,8 +599,8 @@ def auth_add():
     if form.validate_on_submit():
         data = form.data
         auth = Auth(
-            name = data['name'],
-            url = data['url']
+            name=data['name'],
+            url=data['url']
         )
         db.session.add(auth)
         db.session.commit()
@@ -633,6 +640,7 @@ def auth_del(id=None):
     flash('权限删除成功', category='ok')
     return redirect(url_for("admin.auth_list", page=page))
 
+
 @admin.route("/auth/edit/<int:id>", methods=['GET', 'POST'])
 @admin_log_req
 def auth_edit(id=None):
@@ -651,6 +659,7 @@ def auth_edit(id=None):
         return redirect(url_for('admin.auth_edit', id=auth.id))
     return render_template("admin/auth_edit.html", form=form, auth=auth)
 
+
 @admin.route("/role/add/", methods=['GET', 'POST'])
 @admin_log_req
 def role_add():
@@ -665,7 +674,7 @@ def role_add():
         data = form.data
         role = Role(
             name=data['name'],
-            auths=",".join(map(lambda v:str(v), data['auths']))
+            auths=",".join(map(lambda v: str(v), data['auths']))
         )
         db.session.add(role)
         db.session.commit()
@@ -715,13 +724,14 @@ def role_edit(id=None):
         data = form.data
         role = Role(
             name=data['name'],
-            auths=",".join(map(lambda v:str(v), data['auths']))
+            auths=",".join(map(lambda v: str(v), data['auths']))
         )
         db.session.add(role)
         db.session.commit()
         flash('角色修改成功！', category='ok')
         return redirect(url_for('admin.role_add'))
     return render_template("admin/role_edit.html", form=form, role=role)
+
 
 @admin.route("/admin/add/", methods=['GET', 'POST'])
 @admin_log_req
@@ -734,14 +744,14 @@ def admin_add():
         from werkzeug.security import generate_password_hash
         data = form.data
         admin = Admin(
-            name = data['name'],
-            pwd = generate_password_hash(data['pwd']),
-            role_id = data['role_id'],
-            is_super = 1
+            name=data['name'],
+            pwd=generate_password_hash(data['pwd']),
+            role_id=data['role_id'],
+            is_super=1
         )
         db.session.add(admin)
         db.session.commit()
-        flash('管理员添加成功',category='ok')
+        flash('管理员添加成功', category='ok')
         return redirect(url_for('admin.admin_add'))
     return render_template("admin/admin_add.html", form=form)
 

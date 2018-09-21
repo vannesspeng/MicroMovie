@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField, SelectField, SelectMultipleField
 from wtforms.validators import DataRequired, Length, ValidationError, EqualTo
-
 from app.models import Admin, Tag, Auth, Role
 
 
